@@ -1,0 +1,173 @@
+.map {
+    width: 100vw;
+    height: 30vh;
+}
+
+.first_line {
+    display: flex;
+    align-items: center;
+}
+
+.first_line .sort-btn {
+    margin: 10rpx 25rpx 10rpx auto; 
+    font-size: 28rpx;
+    color: #1aad19;
+    padding: 20rpx;
+    background-color: #f0f9ff;
+    border-radius: 8rpx;
+}
+
+.first_line .station-tip {
+    margin: 10rpx 25rpx 10rpx 10rpx; 
+    font-size: 28rpx;
+    color: #666;
+    padding: 20rpx;
+    text-align: center;
+    border-radius: 10rpx;
+}
+
+.first_line .location-tip {
+    margin: 10rpx 25rpx 10rpx 10rpx; 
+    font-size: 28rpx;
+    color: #666;
+    padding: 20rpx;
+    text-align: center;
+    border-radius: 10rpx;
+}
+
+/* pages/index/index.wxss */
+.filter-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 20rpx 30rpx;
+    margin-bottom: 20rpx;
+    border-radius: 12rpx;
+    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.filter-item {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.filter-label {
+    font-size: 28rpx;
+    color: #666;
+    margin-right: 10rpx;
+}
+
+.picker {
+    font-size: 28rpx;
+    color: #333;
+    padding: 10rpx 20rpx;
+    background-color: #f5f5f5;
+    border-radius: 8rpx;
+    min-width: 180rpx;
+}
+
+
+.station-list {
+    width: 100%;
+}
+
+.station-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20rpx;
+}
+
+.station-name {
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #333;
+    flex: 1;
+    margin-right: 20rpx;
+}
+
+.station-info {
+    width: 100%;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10rpx;
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+}
+
+.info-item {
+    font-size: 26rpx;
+    color: #666;
+}
+
+.info-item .label {
+    color: #999;
+    margin-right: 5rpx;
+}
+
+.info-item.address {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.info-item.time {
+    font-size: 24rpx;
+    color: #999;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 12rpx;
+    padding: 30rpx;
+    margin-bottom: 20rpx;
+    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.loading {
+    font-size: 32rpx;
+    color: #1aad19;
+    padding: 20rpx;
+    font-weight: bold;
+}
+
+
+.empty {
+    text-align: center;
+    padding: 100rpx 0;
+}
+
+.empty-icon {
+    font-size: 120rpx;
+    margin-bottom: 30rpx;
+}
+
+.empty-message {
+    font-size: 32rpx;
+    color: #666;
+    margin-bottom: 20rpx;
+}
+
+.empty-tip {
+    font-size: 28rpx;
+    color: #999;
+    margin-bottom: 40rpx;
+}
+
+.refresh-btn {
+    background-color: #1aad19;
+    color: white;
+    border-radius: 20rpx;
+    padding: 0 60rpx;
+    font-size: 28rpx;
+}
+
