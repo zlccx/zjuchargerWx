@@ -14,61 +14,6 @@ Page({
         markers: [],
     },
 
-    // 转换坐标
-    // 定义常量
-
-    outOfChina(lat, lng) {
-        if (lng < 72.004 || lng > 137.8347) {
-            return true;
-        }
-        if (lat < 0.8293 || lat > 55.8271) {
-            return true;
-        }
-        return false;
-    },
-
-    transformLat(lng, lat) {
-        let ret = -100.0 + 2.0 * lng + 3.0 * lat + 0.2 * lat * lat + 0.1 * lng * lat + 0.2 * Math.sqrt(Math.abs(lng));
-        ret += (20.0 * Math.sin(6.0 * lng * PI) + 20.0 * Math.sin(2.0 * lng * PI)) * 2.0 / 3.0;
-        ret += (20.0 * Math.sin(lat * PI) + 40.0 * Math.sin(lat / 3.0 * PI)) * 2.0 / 3.0;
-        ret += (160.0 * Math.sin(lat / 12.0 * PI) + 320 * Math.sin(lat * PI / 30.0)) * 2.0 / 3.0;
-        return ret;
-    },
-
-    transformLng(lng, lat) {
-        let ret = 300.0 + lng + 2.0 * lat + 0.1 * lng * lng + 0.1 * lng * lat + 0.1 * Math.sqrt(Math.abs(lng));
-        ret += (20.0 * Math.sin(6.0 * lng * PI) + 20.0 * Math.sin(2.0 * lng * PI)) * 2.0 / 3.0;
-        ret += (20.0 * Math.sin(lng * PI) + 40.0 * Math.sin(lng / 3.0 * PI)) * 2.0 / 3.0;
-        ret += (150.0 * Math.sin(lng / 12.0 * PI) + 300.0 * Math.sin(lng / 30.0 * PI)) * 2.0 / 3.0;
-        return ret;
-    },
-
-    wgs84ToGcj02(lng, lat) {
-        // 如果坐标在中国境外，则不进行转换
-        if (this.outOfChina(lat, lng)) {
-            return { lng: lng, lat: lat };
-        }
-
-        // 计算基础偏移量
-        let dlat = transformLat(lng - 105.0, lat - 35.0);
-        let dlng = transformLng(lng - 105.0, lat - 35.0);
-
-        // 考虑椭球体修正
-        const radLat = lat / 180.0 * PI;
-        let magic = Math.sin(radLat);
-        magic = 1 - EE * magic * magic;
-        const sqrtMagic = Math.sqrt(magic);
-
-        dlat = (dlat * 180.0) / ((EARTH_R * (1 - EE)) / (magic * sqrtMagic) * PI);
-        dlng = (dlng * 180.0) / (EARTH_R / sqrtMagic * Math.cos(radLat) * PI);
-
-        // 计算最终坐标
-        const mglat = lat + dlat;
-        const mglng = lng + dlng;
-
-        return { lng: mglng, lat: mglat };
-    },
-
     // 用 Haversine 公式计算
     calculateDistance(lat1, lng1, lat2, lng2) {
         const R = 6371000; // 地球半径(米)
@@ -87,17 +32,31 @@ Page({
         return Math.round(R * c);
     },
 
+    bd09ToGcj02(bd_lon, bd_lat) {
+        const X_PI = (Math.PI * 3000.0) / 180.0;
+        const x = bd_lon - 0.0065;
+        const y = bd_lat - 0.006;
+        const z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * X_PI);
+        const theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * X_PI);
+        
+        const gcj_lon = z * Math.cos(theta);
+        const gcj_lat = z * Math.sin(theta);
+        
+        return [gcj_lon, gcj_lat];
+    },
+
     transport_data: async function () { // omg 我终于会处理异步了
         let [user_location, providers, status] = await Promise.all([
             app.globalData.user_location_promise,
             app.globalData.providers_promise,
             app.globalData.status_promise,
-        ])
+        ]);
         this.data.stations = status.stations;
         for (let i = 0; i < this.data.stations.length; i++) {
             let u = this.data.stations[i];
+            [u.lon, u.lat] = this.bd09ToGcj02(u.lon, u.lat);
             // let newpos = this.wgs84ToGcj02(user_location.latitude, user_location.longitude);
-            this.data.stations[i].dist = 
+            this.data.stations[i].dist =
                 this.calculateDistance(u.lat, u.lon, user_location.latitude, user_location.longitude);
         }
         this.data.stations.sort((a, b) => a.dist - b.dist);
