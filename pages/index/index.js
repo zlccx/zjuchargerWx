@@ -55,7 +55,6 @@ Page({
         for (let i = 0; i < this.data.stations.length; i++) {
             let u = this.data.stations[i];
             [u.lon, u.lat] = this.bd09ToGcj02(u.lon, u.lat);
-            // let newpos = this.wgs84ToGcj02(user_location.latitude, user_location.longitude);
             this.data.stations[i].dist =
                 this.calculateDistance(u.lat, u.lon, user_location.latitude, user_location.longitude);
         }
@@ -75,11 +74,9 @@ Page({
                 width: 30,
                 height: 30,
             })
-            console.log(u);
             i++;
         }
         this.setData({ markers: this.data.markers });
-        console.log(this.calculateDistance(30.300, 120.100, 30.302, 120.098));
         console.log('数据同步成功-index.js');
     },
 

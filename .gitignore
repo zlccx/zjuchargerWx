@@ -1,0 +1,49 @@
+# 小程序开发工具配置文件
+.project
+.project.user
+.project.properties
+
+# 微信开发者工具配置
+.DS_Store
+*.swp
+*.swo
+*~
+
+# 项目私有配置文件
+project.private.config.json
+project.config.json
+
+# 敏感信息文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 构建产物
+dist/
+build/
+
+# 日志文件
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 编辑器配置
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# npm依赖（如果有）
+node_modules/
+
+# 缓存文件
+.cache/
+.temp/
+.tmp/
