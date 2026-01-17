@@ -1,8 +1,27 @@
 {
     "pages": [
         "pages/index/index",
-        "pages/logs/logs"
+        "pages/user/user"
     ],
+    "tabBar": {
+        "color": "#919996",
+        "selectedColor": "#000000",
+        "backgroundColor": "#ffffff",
+        "list": [
+            {
+                "pagePath": "pages/index/index",
+                "text": "主页",
+                "iconPath": "/imgs/home_page.png",
+                "selectedIconPath": "/imgs/home_page_selected.png"
+            },
+            {
+                "pagePath": "pages/user/user",
+                "text": "用户",
+                "iconPath": "/imgs/personal_page.png",
+                "selectedIconPath": "/imgs/personal_page_selected.png"
+            }
+        ]
+    },
     "window": {
         "navigationBarTextStyle": "black",
         "navigationBarTitleText": "ZJU Charger",
