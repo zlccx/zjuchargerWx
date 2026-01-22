@@ -5,62 +5,55 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    collections: []
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+    this.loadCollections();
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow() {
-
+    this.loadCollections();
   },
 
   /**
-   * 生命周期函数--监听页面隐藏
+   * 加载收藏的充电桩
    */
-  onHide() {
-
+  loadCollections() {
+    const collections = wx.getStorageSync('collections') || [];
+    this.setData({
+      collections: collections
+    });
   },
 
   /**
-   * 生命周期函数--监听页面卸载
+   * 取消收藏
    */
-  onUnload() {
-
+  removeCollection(e) {
+    const index = e.currentTarget.dataset.index;
+    let collections = this.data.collections;
+    collections.splice(index, 1);
+    wx.setStorageSync('collections', collections);
+    this.setData({
+      collections: collections
+    });
+    wx.showToast({
+      title: '已取消收藏',
+      duration: 1000
+    });
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+    this.loadCollections();
+    wx.stopPullDownRefresh();
   }
 })

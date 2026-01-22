@@ -1,1 +1,115 @@
-/* pages/user/user.wxss */
+.user-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* 头部 */
+.user-header {
+  background-color: #fff;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #e0e0e0;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.user-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 收藏容器 */
+.collections-container {
+  padding: 30rpx;
+}
+
+/* 空收藏状态 */
+.empty-collections {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+  background-color: #fff;
+  border-radius: 10rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+}
+
+.empty-hint {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 收藏列表 */
+.collections-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+/* 收藏项 */
+.collection-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25rpx;
+  background-color: #fff;
+  border-radius: 10rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.collection-item:hover {
+  transform: translateY(-2rpx);
+  box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.1);
+}
+
+.collection-name {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+}
+
+/* 操作按钮 */
+.collection-actions {
+  display: flex;
+  align-items: center;
+}
+
+.action-btn {
+  background-color: #f0f0f0;
+  padding: 10rpx 20rpx;
+  border-radius: 20rpx;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.action-text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 响应式设计 */
+@media (max-width: 375px) {
+  .user-title {
+    font-size: 28rpx;
+  }
+  
+  .collection-name {
+    font-size: 26rpx;
+  }
+  
+  .action-text {
+    font-size: 22rpx;
+  }
+}

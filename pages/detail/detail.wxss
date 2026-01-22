@@ -1,0 +1,113 @@
+.detail-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 地图样式，与index页面保持一致 */
+.map {
+  width: 100%;
+  height: 40vh;
+  position: relative;
+}
+
+/* 充电桩信息区域 */
+.station-info {
+  flex: 1;
+  background-color: #f5f5f5;
+  border-radius: 20rpx 20rpx 0 0;
+  margin-top: -20rpx;
+  padding: 30rpx;
+  box-shadow: 0 -5rpx 15rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 信息头部 */
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #e0e0e0;
+}
+
+.station-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+}
+
+/* 收藏按钮 */
+.favorite-btn {
+  display: flex;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 10rpx 20rpx;
+  border-radius: 20rpx;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.favorite-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.favorite-icon {
+  font-size: 28rpx;
+  color: #ff9500;
+  margin-right: 8rpx;
+}
+
+.favorite-text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 信息内容 */
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 25rpx;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.info-label {
+  font-size: 26rpx;
+  color: #666;
+  width: 140rpx;
+  flex-shrink: 0;
+}
+
+.info-value {
+  font-size: 26rpx;
+  color: #333;
+  flex: 1;
+}
+
+/* 响应式设计 */
+@media (max-width: 375px) {
+  .station-name {
+    font-size: 28rpx;
+  }
+  
+  .info-label,
+  .info-value {
+    font-size: 24rpx;
+  }
+  
+  .info-label {
+    width: 120rpx;
+  }
+}

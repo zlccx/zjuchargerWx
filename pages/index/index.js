@@ -1,9 +1,6 @@
 // index.js
 
 const app = getApp();
-const PI = 3.1415926535897932384626;
-const EARTH_R = 6378245.0;  // 地球长半轴
-const EE = 0.00669342162296594323;  // 偏心率平方
 const BASE_DIST = 500; // 设定为 500m 为一组
 Page({
     data: {
@@ -17,6 +14,8 @@ Page({
 
     // 用 Haversine 公式计算经纬度距离
     calculateDistance(lat1, lng1, lat2, lng2) {
+        const EARTH_R = 6378245.0;  // 地球长半轴
+        const EE = 0.00669342162296594323;  // 偏心率平方
         const R = 6371000; // 地球半径(米)
         const toRad = (d) => d * Math.PI / 180;
 
@@ -40,21 +39,21 @@ Page({
         const y = bd_lat - 0.006;
         const z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * X_PI);
         const theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * X_PI);
-        
+
         const gcj_lon = z * Math.cos(theta);
         const gcj_lat = z * Math.sin(theta);
-        
+
         return [gcj_lon, gcj_lat];
     },
 
+    // 将充电桩智能排序
     smart_sort() {
         let stations = this.data.stations;
         let divided_stations = [];
         let zero = [];
         for (let u of stations) {
-            for (let i = divided_stations.length; i <= u.dist / BASE_DIST; i ++ )
+            for (let i = divided_stations.length; i <= u.dist / BASE_DIST; i++)
                 divided_stations.push([]);
-            console.log("12.13 -> ", parseInt(u.dist/BASE_DIST), divided_stations.length);
             if (u.free) divided_stations[parseInt(u.dist / BASE_DIST)].push(u);
             else zero.push(u);
         }
@@ -65,17 +64,17 @@ Page({
                 new_stations.push(v);
         }
         for (let u of zero) new_stations.push(u);
-        console.log(new_stations);
         this.setData({
             stations: new_stations,
         })
     },
 
-    transport_data: async function () { // omg 我终于会处理异步了
+    async transport_data() { 
+        // 并行获取异步数据
         let [user_location, providers, status] = await Promise.all([
-            app.globalData.user_location_promise,
-            app.globalData.providers_promise,
-            app.globalData.status_promise,
+            app.global_data.user_location_promise,
+            app.global_data.providers_promise,
+            app.global_data.status_promise,
         ]);
         this.data.stations = status.stations;
         for (let i = 0; i < this.data.stations.length; i++) {
@@ -84,15 +83,12 @@ Page({
             this.data.stations[i].dist =
                 this.calculateDistance(u.lat, u.lon, user_location.latitude, user_location.longitude);
         }
-        
         this.setData({
             user_location: user_location,
             providers: providers,
             stations: status.stations,
         });
-
         this.smart_sort();
-
         let i = 0;
         for (let u of this.data.stations) {
             this.data.markers.push({
@@ -106,10 +102,10 @@ Page({
             i++;
         }
         this.setData({ markers: this.data.markers });
-        console.log('数据同步成功-index.js');
+        console.log('index.js---数据同步成功');
     },
 
-    changeSort() {
+    changeSort() { // 更改排序方式 
         this.data.sortBy = (this.data.sortBy + 1) % 3;
         if (this.data.sortBy == 0) {
             this.smart_sort();
@@ -124,6 +120,15 @@ Page({
             sortBy: this.data.sortBy,
             stations: this.data.stations,
         })
+    },
+
+    go_detail(e) {
+        const index = e.currentTarget.dataset.index;
+        const station = this.data.stations[index];
+        console.log("点击了充电桩\n", station);
+        wx.navigateTo({
+            url: '/pages/detail/detail?station=' + JSON.stringify(station)
+        });
     },
 
     onLoad: function () {

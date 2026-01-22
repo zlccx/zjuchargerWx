@@ -1,2 +1,24 @@
 <!--pages/user/user.wxml-->
-<text>pages/user/user.wxml</text>
+<view class="user-container">
+  <view class="user-header">
+    <text class="user-title">我的收藏</text>
+  </view>
+
+  <view class="collections-container">
+    <view wx:if="{{collections.length === 0}}" class="empty-collections">
+      <text class="empty-text">暂无收藏的充电桩</text>
+      <text class="empty-hint">在充电桩详情页点击收藏按钮添加</text>
+    </view>
+
+    <view wx:else class="collections-list">
+      <view wx:for="{{collections}}" wx:key="{{index}}" class="collection-item">
+        <text class="collection-name">{{item}}</text>
+        <view class="collection-actions">
+          <view class="action-btn" bindtap="removeCollection" data-index="{{index}}">
+            <text class="action-text">取消收藏</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -19,39 +19,8 @@
 <view class="container">
     <block wx:if="{{stations.length > 0}}">
         <view class="station-list">
-            <view wx:for="{{stations}}" wx:key="hash_id" class="card" bindtap="goToStationDetail" data-id="{{item.devid}}">
-                <view class="station-header">
-                    <view class="station-name">{{item.name}}</view>
-                    <view class="station-status">
-                        <text wx:if="{{item.free / item.total > 0.6 || item.free >= 10}}" class="status-badge status-free">空闲</text>
-                        <text wx:else class="status-badge status-occupied">使用中</text>
-                    </view>
-                </view>
-
-                <view class="station-info">
-                    <view class="info-row">
-                        <text class="info-item">
-                            <text class="label">运营商：</text>
-                            <text>{{item.provider || '未知'}}</text>
-                        </text>
-                        <text class="info-item">
-                            <text class="label">空闲：</text>
-                            <text>{{item.free || 0}}/{{item.total || 0}}</text>
-                        </text>
-                    </view>
-
-                    <view class="info-row">
-                        <text class="info-item">
-                            <text class="label">校区：</text>
-                            <text class="address">{{item.campus_name || '未知地址'}}</text>
-                        </text>
-
-                        <text class="info-item" wx:if="{{item.dist}}">
-                            <text class="label">距离：</text>
-                            <text>{{item.dist}}m</text>
-                        </text>
-                    </view>
-                </view>
+            <view wx:for="{{stations}}" wx:key="hash_id" bindtap="go_detail" data-index="{{index}}">
+                <charger-item item="{{item}}" />
             </view>
         </view>
     </block>

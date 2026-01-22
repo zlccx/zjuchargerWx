@@ -73,66 +73,6 @@
     width: 100%;
 }
 
-.station-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20rpx;
-}
-
-.station-name {
-    font-size: 32rpx;
-    font-weight: bold;
-    color: #333;
-    flex: 1;
-    margin-right: 20rpx;
-}
-
-.station-info {
-    width: 100%;
-}
-
-.info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10rpx;
-}
-
-.info-row:last-child {
-    margin-bottom: 0;
-}
-
-.info-item {
-    font-size: 26rpx;
-    color: #666;
-}
-
-.info-item .label {
-    color: #999;
-    margin-right: 5rpx;
-}
-
-.info-item.address {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.info-item.time {
-    font-size: 24rpx;
-    color: #999;
-}
-
-.card {
-    background-color: #fff;
-    border-radius: 12rpx;
-    padding: 30rpx;
-    margin-bottom: 20rpx;
-    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
-}
-
 .loading {
     font-size: 32rpx;
     color: #1aad19;
