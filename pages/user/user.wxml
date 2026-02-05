@@ -12,7 +12,10 @@
 
     <view wx:else class="collections-list">
       <view wx:for="{{collections}}" wx:key="{{index}}" class="collection-item">
-        <text class="collection-name">{{item}}</text>
+        <view class="collection-info" bindtap="goToDetail" data-index="{{index}}">
+          <text class="collection-name">{{item.name}}</text>
+          <text class="collection-free">{{item.free || 0}}/{{item.total || 0}}</text>
+        </view>
         <view class="collection-actions">
           <view class="action-btn" bindtap="removeCollection" data-index="{{index}}">
             <text class="action-text">取消收藏</text>

@@ -41,8 +41,17 @@ Page({
   // 检查是否已收藏
   checkFavoriteStatus: function () {
     const stationName = this.data.station.name;
-    const collections = wx.getStorageSync('collections') || [];
-    const isFavorite = collections.includes(stationName);
+    let collections = wx.getStorageSync('collections') || [];
+    let isFavorite = false;
+    
+    // 检查是否已收藏
+    for (let i = 0; i < collections.length; i++) {
+      if (collections[i].name === stationName) {
+        isFavorite = true;
+        break;
+      }
+    }
+    
     this.setData({
       isFavorite: isFavorite
     });
@@ -50,16 +59,16 @@ Page({
 
   // 切换收藏状态
   toggleFavorite: function () {
-    const stationName = this.data.station.name;
+    const station = this.data.station;
     let collections = wx.getStorageSync('collections') || [];
     let isFavorite = this.data.isFavorite;
 
     if (isFavorite) {
       // 取消收藏
-      collections = collections.filter(item => item !== stationName);
+      collections = collections.filter(item => item.name !== station.name);
     } else {
       // 添加收藏
-      collections.push(stationName);
+      collections.push(station);
     }
 
     // 保存到本地存储

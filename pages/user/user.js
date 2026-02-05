@@ -50,6 +50,17 @@ Page({
   },
 
   /**
+   * 跳转到充电桩详情页
+   */
+  goToDetail(e) {
+    const index = e.currentTarget.dataset.index;
+    const station = this.data.collections[index];
+    wx.navigateTo({
+      url: '/pages/detail/detail?station=' + JSON.stringify(station)
+    });
+  },
+
+  /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh() {
