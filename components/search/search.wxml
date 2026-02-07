@@ -1,0 +1,13 @@
+<view class="search-container" wx:if="{{searchMode || searched}}">
+  <view class="search-input-wrapper">
+    <input 
+      class="search-input" 
+      placeholder="请输入充电桩名称" 
+      value="{{searchText}}" 
+      bindinput="onInput"
+    />
+  </view>
+  <view class="search-btn" bindtap="onSearch">
+    <text>搜索</text>
+  </view>
+</view>

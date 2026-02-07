@@ -1,13 +1,15 @@
 // app.js
 App({
-    global_data: {
-        providers: [], // 大部分内容都不需要存在App.js，存了也看不到
+    globalData: {
+        providers: [],
+        user_location: null,
+        stations: null,
+        originalStations: null,
+        likeStations: [], // 收藏的充电桩数组
         // promises
         user_location_promise: null,
         providers_promise: null,
-        status_promise: null,
-        // 收藏的充电桩列表
-        collections: []
+        status_promise: null
     },
     // 以 gcj02 编码方式获取用户地址
     get_user_location() {
@@ -15,11 +17,11 @@ App({
             'type': 'gcj02',
             'success': (res) => {
                 console.log('app.js---successfully get user_location', res.longitude, res.latitude);
-                this.global_data.user_location = {
+                this.globalData.user_location = {
                     'longitude': res.longitude,
                     'latitude': res.latitude
                 };
-                resolve(this.global_data.user_location);
+                resolve(this.globalData.user_location);
             },
             'fail': (err) => {
                 console.log('fail to get user_location');
@@ -34,9 +36,9 @@ App({
             success: (res) => {
                 console.log('成功获得充电桩服务商列表');
                 for (let i = 0; i < res.data.length; i++) {
-                    this.global_data.providers.push(res.data[i].name);
+                    this.globalData.providers.push(res.data[i].name);
                 }
-                resolve(this.global_data.providers);
+                resolve(this.globalData.providers);
             },
             fail: (err) => {
                 console.log('获得充电桩服务商列表失败');
@@ -58,10 +60,10 @@ App({
             },
         }));
     },
-
+    
     onLaunch() {
-        this.global_data.user_location_promise = this.get_user_location();
-        this.global_data.providers_promise = this.get_charger_providers();
-        this.global_data.status_promise = this.get_charger_status();
-    },
+        this.globalData.user_location_promise = this.get_user_location();
+        this.globalData.providers_promise = this.get_charger_providers();
+        this.globalData.status_promise = this.get_charger_status();
+    }
 })

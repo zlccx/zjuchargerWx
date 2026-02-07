@@ -1,58 +1,49 @@
 <view class="detail-container">
-  <!-- 地图区域 -->
-  <map 
-    longitude="{{station.lon}}" 
-    latitude="{{station.lat}}" 
-    class="map" 
-    show-location="true" 
-    markers="{{markers}}"
-  />
-
-  <!-- 充电桩信息区域 -->
-  <view class="station-info">
-    <view class="info-header">
-      <view class="station-name">{{station.name}}</view>
-      <view class="favorite-btn" bindtap="toggleFavorite">
-        <text class="favorite-icon">{{isFavorite ? '★' : '☆'}}</text>
-        <text class="favorite-text">{{isFavorite ? '已收藏' : '收藏'}}</text>
-      </view>
+    <!-- 地图区域 -->
+    <view class="map-container">
+        <map longitude="{{station.lon}}" latitude="{{station.lat}}" class="map" show-location="true"
+            markers="{{markers}}" />
     </view>
 
-    <view class="info-content">
-      <view class="info-row">
-        <view class="info-item">
-          <text class="info-label">运营商：</text>
-          <text class="info-value">{{station.provider || '未知'}}</text>
+    <!-- 充电桩信息区域 -->
+    <view class="station-info">
+        <view class="info-header">
+            <text class="station-name">{{station.name}}</text>
+            <view class="favorite-btn" bindtap="toggleFavorite">
+                <text class="favorite-icon">{{station.like ? '★' : '☆'}}</text>
+                <text>{{station.like ? '已收藏' : '收藏'}}</text>
+            </view>
         </view>
-      </view>
 
-      <view class="info-row">
-        <view class="info-item">
-          <text class="info-label">空闲/总数：</text>
-          <text class="info-value">{{station.free || 0}}/{{station.total || 0}}</text>
-        </view>
-      </view>
+        <view class="info-content">
+            <view class="cards-container">
+                <view class="status-card status-free">
+                    <text class="status-label">空闲</text>
+                    <text class="status-number">{{station.free || 0}}</text>
+                </view>
+                <view class="status-card status-total">
+                    <text class="status-label">总数</text>
+                    <text class="status-number">{{station.total || 0}}</text>
+                </view>
+                <view class="status-card status-provider" bindtap="navigateToIndexWithProvider">
+                    <text class="status-label">运营商</text>
+                    <text class="status-text">{{station.provider || '未知'}}</text>
+                </view>
+                <view class="status-card status-campus" bindtap="navigateToIndexWithCampus">
+                    <text class="status-label">校区</text>
+                    <text class="status-text">{{station.campus_name || '未知地址'}}</text>
+                </view>
+            </view>
 
-      <view class="info-row">
-        <view class="info-item">
-          <text class="info-label">校区：</text>
-          <text class="info-value">{{station.campus_name || '未知地址'}}</text>
-        </view>
-      </view>
+            <view class="distance-display">
+                <text class="distance-value">{{station.dist}}m</text>
+            </view>
 
-      <view class="info-row">
-        <view class="info-item">
-          <text class="info-label">距离：</text>
-          <text class="info-value">{{station.dist}}m</text>
+            <!-- 导航条目 -->
+            <view class="navigation-item" bindtap="openNavigation">
+                <image src="/imgs/navigation.png" class="nav-icon"></image>
+                <text class="nav-text">打开导航</text>
+            </view>
         </view>
-      </view>
-
-      <view class="info-row">
-        <view class="info-item">
-          <text class="info-label">设备ID：</text>
-          <text class="info-value">{{station.devid}}</text>
-        </view>
-      </view>
     </view>
-  </view>
 </view>

@@ -1,4 +1,11 @@
 /* app.wxss */
+
+view, text, map, image {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 page {
     background-color: #f5f5f5;
     font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;

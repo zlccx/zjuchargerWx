@@ -1,5 +1,6 @@
 {
   "usingComponents": {
-    "charger-item": "../../components/chargerItem/chargerItem"
+    "charger-item": "../../components/chargerItem/chargerItem",
+    "search": "../../components/search/search"
   }
 }

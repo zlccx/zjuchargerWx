@@ -4,22 +4,25 @@ const app = getApp();
 Page({
   data: {
     station: {},
-    markers: [],
-    isFavorite: false
+    markers: []
   },
 
   onLoad: function (options) {
     // 获取从上一个页面传递过来的充电桩数据
     const stationData = JSON.parse(options.station);
+    
+    // 检查当前充电桩是否已收藏
+    const likeStations = app.globalData.likeStations;
+    const isLiked = likeStations.some(item => item.hash_id === stationData.hash_id);
+    stationData.like = isLiked;
+    
     this.setData({
-      station: stationData
+      station: stationData,
+      fromCampus: options.campus || '全部' // 接收从首页传递的校区信息
     });
 
     // 初始化地图标记
     this.initMapMarker();
-
-    // 检查是否已收藏
-    this.checkFavoriteStatus();
   },
 
   // 初始化地图标记
@@ -30,50 +33,111 @@ Page({
       latitude: station.lat,
       longitude: station.lon,
       title: station.name,
-      width: 30,
-      height: 30
+      width: 40,
+      height: 40,
+      iconPath: '/imgs/marker.png'
     }];
     this.setData({
       markers: markers
     });
   },
 
-  // 检查是否已收藏
-  checkFavoriteStatus: function () {
-    const stationName = this.data.station.name;
-    const collections = wx.getStorageSync('collections') || [];
-    const isFavorite = collections.includes(stationName);
-    this.setData({
-      isFavorite: isFavorite
-    });
+  // 深拷贝函数
+  deepCopy(obj) {
+    if (obj === null || typeof obj !== 'object') {
+      return obj;
+    }
+    if (obj instanceof Date) {
+      return new Date(obj.getTime());
+    }
+    if (obj instanceof Array) {
+      return obj.map(item => this.deepCopy(item));
+    }
+    if (typeof obj === 'object') {
+      const clonedObj = {};
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          clonedObj[key] = this.deepCopy(obj[key]);
+        }
+      }
+      return clonedObj;
+    }
   },
 
-  // 切换收藏状态
+  // 收藏按钮点击事件
   toggleFavorite: function () {
-    const stationName = this.data.station.name;
-    let collections = wx.getStorageSync('collections') || [];
-    let isFavorite = this.data.isFavorite;
-
-    if (isFavorite) {
-      // 取消收藏
-      collections = collections.filter(item => item !== stationName);
+    let station = this.data.station;
+    let isLiked = false;
+    let likeStations = app.globalData.likeStations;
+    
+    // 检查当前充电桩是否已收藏
+    const index = likeStations.findIndex(item => item.hash_id === station.hash_id);
+    
+    if (index === -1) {
+      // 未收藏，添加到收藏数组（深拷贝）
+      const clonedStation = this.deepCopy(station);
+      likeStations.push(clonedStation);
+      isLiked = true;
     } else {
-      // 添加收藏
-      collections.push(stationName);
+      // 已收藏，从收藏数组中移除
+      likeStations.splice(index, 1);
+      isLiked = false;
     }
-
-    // 保存到本地存储
-    wx.setStorageSync('collections', collections);
-
-    // 更新状态
+    
+    // 更新全局收藏数组
+    app.globalData.likeStations = likeStations;
+    
+    // 更新当前页面的station对象的like状态（仅用于UI显示）
+    station.like = isLiked;
     this.setData({
-      isFavorite: !isFavorite
+      station: station
     });
-
-    // 提示用户
+    
+    // 显示提示信息
     wx.showToast({
-      title: isFavorite ? '已取消收藏' : '收藏成功',
+      title: isLiked ? '收藏成功' : '取消收藏',
+      icon: 'success',
       duration: 1000
+    });
+    
+    // 更新上一个页面的数据（无论是index还是user页面）
+    const pages = getCurrentPages();
+    const prevPage = pages[pages.length - 2];
+    if (prevPage) {
+      if (prevPage.data.favoriteStations) {
+        // 如果是user页面，重新加载收藏列表
+        if (prevPage.loadFavoriteStations) {
+          prevPage.loadFavoriteStations();
+        }
+      }
+    }
+  },
+
+  // 打开导航
+  openNavigation: function () {
+    const station = this.data.station;
+    wx.openLocation({
+      latitude: station.lat,
+      longitude: station.lon,
+      name: station.name,
+      address: station.campus_name || '',
+      scale: 18
+    });
+  },
+  
+  // 点击校区卡片跳转回首页并选择该校区
+  navigateToIndexWithCampus: function () {
+    const campus = this.data.station.campus_name;
+    wx.redirectTo({
+      url: '/pages/index/index?filterType=campus&filterValue=' + encodeURIComponent(campus)
+    });
+  },
+  
+  // 点击运营商卡片跳转回首页并选择该运营商
+  navigateToIndexWithProvider: function () {
+    const provider = this.data.station.provider;
+    wx.redirectTo({
+      url: '/pages/index/index?filterType=provider&filterValue=' + encodeURIComponent(provider)
     });
   }
 });

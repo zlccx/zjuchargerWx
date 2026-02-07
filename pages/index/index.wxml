@@ -1,6 +1,10 @@
 <!-- index.wxml -->
-<map longitude="{{user_location.longitude}}" latitude="{{user_location.latitude}}" 
-    class="map" show-location="true" markers="{{markers}}"/>
+<!-- 搜索组件 -->
+<search 
+    searchMode="{{searchMode}}" 
+    searched="{{searched}}" 
+    bind:search="onSearch"
+/>
 
 <!-- 第一行的提示信息 -->
 <view class="first_line">
@@ -15,11 +19,31 @@
     </view>
 </view>
 
+<!-- 筛选行 -->
+<view class="filter-row" wx:if="{{stations.length > 0}}">
+    <!-- 校区筛选 -->
+    <view class="filter-item campus-filter">
+        <picker bindchange="onCampusChange" value="{{selectedCampusIndex}}" range="{{campusList}}">
+            <view class="picker">
+                校区：{{campusList[selectedCampusIndex]}}
+            </view>
+        </picker>
+    </view>
+    <!-- 运营商筛选 -->
+    <view class="filter-item provider-filter">
+        <picker bindchange="onProviderChange" value="{{selectedProviderIndex}}" range="{{providerList}}">
+            <view class="picker">
+                运营商：{{providerList[selectedProviderIndex]}}
+            </view>
+        </picker>
+    </view>
+</view>
+
 <!-- 充电桩列表 -->
 <view class="container">
     <block wx:if="{{stations.length > 0}}">
         <view class="station-list">
-            <view wx:for="{{stations}}" wx:key="hash_id" bindtap="go_detail" data-index="{{index}}">
+            <view wx:for="{{stations}}" wx:key="hash_id" bindtap="go_detail" data-index="{{index}}" wx:if="{{item.view}}">
                 <charger-item item="{{item}}" />
             </view>
         </view>

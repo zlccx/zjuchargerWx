@@ -1,113 +1,269 @@
-.detail-container {
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+.label { /*文本通用样式*/
+    font-size: 28rpx;
+    color: #8c8c8c;
+    width: 150rpx;
 }
 
-/* 地图样式，与index页面保持一致 */
+.detail-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #f8f9fa;
+}
+
+/* 地图容器样式 */
+.map-container {
+    width: 90vw;
+    height: 40vh;
+    margin-top: 15rpx;
+    border-radius: 30rpx;
+    box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+/* 地图样式 */
 .map {
-  width: 100%;
-  height: 40vh;
-  position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 /* 充电桩信息区域 */
 .station-info {
-  flex: 1;
-  background-color: #f5f5f5;
-  border-radius: 20rpx 20rpx 0 0;
-  margin-top: -20rpx;
-  padding: 30rpx;
-  box-shadow: 0 -5rpx 15rpx rgba(0, 0, 0, 0.1);
+    width: 90vw;
+    height: 55vh;
+    background-color: #ffffff;
+    border-radius: 30rpx;
+    margin: 30rpx 0;
+    padding: 40rpx;
+    box-shadow: 0 -8rpx 25rpx rgba(0, 0, 0, 0.08);
+    overflow-y: auto;
 }
 
 /* 信息头部 */
 .info-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30rpx;
-  padding-bottom: 20rpx;
-  border-bottom: 1rpx solid #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 30rpx;
+    position: relative;
 }
 
 .station-name {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #333;
-  flex: 1;
+    font-size: 36rpx;
+    font-weight: bold;
+    color: #1a1a1a;
 }
 
 /* 收藏按钮 */
 .favorite-btn {
-  display: flex;
-  align-items: center;
-  background-color: #f0f0f0;
-  padding: 10rpx 20rpx;
-  border-radius: 20rpx;
-  cursor: pointer;
-  transition: all 0.3s ease;
+    position: absolute;
+    right: -20rpx;
+    top: 30rpx;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    background-color: #f0f2f5;
+    padding: 15rpx 28rpx;
+    border-radius: 28rpx;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.favorite-btn:hover {
-  background-color: #e0e0e0;
+.favorite-btn:active {
+    background-color: #e4e6eb;
+    transform: scale(0.95);
 }
 
 .favorite-icon {
-  font-size: 28rpx;
-  color: #ff9500;
-  margin-right: 8rpx;
+    font-size: 30rpx;
+    color: #ff9500;
+    margin-right: 10rpx;
 }
 
-.favorite-text {
-  font-size: 24rpx;
-  color: #666;
+.favorite-btn text {
+    font-size: 26rpx;
+    color: #666;
 }
 
 /* 信息内容 */
 .info-content {
-  display: flex;
-  flex-direction: column;
-  gap: 25rpx;
+    display: flex;
+    flex-direction: column;
 }
 
-.info-row {
-  display: flex;
-  align-items: center;
+/* 卡片容器 - Grid布局 */
+.cards-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 30rpx;
+    margin: 30rpx 0;
+    max-width: 500rpx;
+    margin-left: auto;
+    margin-right: auto;
 }
+
+/* 状态卡片基础样式 */
+.status-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 25rpx 40rpx;
+    border-radius: 20rpx;
+    min-height: 120rpx;
+    width: 200rpx;
+    height: 150rpx;
+}
+
+/* 空闲卡片样式 */
+.status-free {
+    background-color: #e6f7ee;
+    color: #1aad19;
+}
+
+/* 总数卡片样式 */
+.status-total {
+    background-color: #f0f2f5;
+    color: #666;
+}
+
+/* 运营商卡片样式 */
+.status-provider {
+    background-color: #e6f7ee;
+    color: #666;
+}
+
+/* 校区卡片样式 */
+.status-campus {
+    background-color: #e6f7ee;
+    color: #666;
+}
+
+/* 状态标签 */
+.status-label {
+    font-size: 26rpx;
+    margin-bottom: 10rpx;
+}
+
+/* 状态数字 */
+.status-number {
+    font-size: 42rpx;
+    font-weight: bold;
+}
+
+/* 状态文本 */
+.status-text {
+    font-size: 30rpx;
+    font-weight: normal;
+    text-align: center;
+    max-width: 120rpx;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 距离显示 */
+.distance-display {
+    display: flex;
+    justify-content: center;
+    margin: 30rpx 0;
+}
+
+.distance-value {
+    font-size: 42rpx;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+}
+
+
 
 .info-item {
-  display: flex;
-  align-items: center;
-  width: 100%;
+    display: flex;
+    align-items: center;
+    border-bottom: 1rpx solid #f5f5f5;
 }
 
-.info-label {
-  font-size: 26rpx;
-  color: #666;
-  width: 140rpx;
-  flex-shrink: 0;
+.info-item:last-child {
+    border-bottom: none;
 }
 
-.info-value {
-  font-size: 26rpx;
-  color: #333;
-  flex: 1;
+.info-item text:not(.label) {
+    font-size: 28rpx;
+    color: #333;
+    flex: 1;
+    line-height: 1.5;
+}
+
+/* 状态标签样式 */
+
+.status-free {
+    background-color: #e6f7ee;
+    color: #1aad19;
+}
+
+.status-occupied {
+    background-color: #fff1f0;
+    color: #ff4d4f;
+}
+
+/* 导航条目 */
+.navigation-item {
+    display: flex;
+    justify-content: center;
+    padding: 25rpx 0;
+    margin-top: 20rpx;
+    border-radius: 20rpx;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.navigation-item:active {
+    background-color: #e9ecef;
+}
+
+.navigation-item .nav-icon {
+    width: 36rpx;
+    height: 36rpx;
+    margin-right: 15rpx;
+}
+
+.navigation-item .nav-text {
+    font-size: 30rpx;
+    color: #1989fa;
+    font-weight: bold;
 }
 
 /* 响应式设计 */
 @media (max-width: 375px) {
-  .station-name {
-    font-size: 28rpx;
-  }
-  
-  .info-label,
-  .info-value {
-    font-size: 24rpx;
-  }
-  
-  .info-label {
-    width: 120rpx;
-  }
+    .station-name {
+        font-size: 32rpx;
+    }
+
+    .label,
+    .info-item text:not(.label) {
+        font-size: 26rpx;
+    }
+
+    .label {
+        width: 130rpx;
+    }
+
+    .favorite-btn {
+        padding: 12rpx 24rpx;
+    }
+
+    .navigation-item .nav-icon {
+        width: 32rpx;
+        height: 32rpx;
+    }
+
+    .navigation-item .nav-text {
+        font-size: 28rpx;
+    }
 }
