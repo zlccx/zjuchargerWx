@@ -6,6 +6,9 @@ App({
         stations: null,
         originalStations: null,
         likeStations: [], // 收藏的充电桩数组
+        // 返回首页时需要设置的筛选参数
+        returnCampus: null,
+        returnProvider: null,
         // promises
         user_location_promise: null,
         providers_promise: null,

@@ -377,25 +377,23 @@ Page({
         });
     },
 
-    onLoad: function (options) {
+    onLoad: function () {
         this.transport_data();
+    },
+    
+    onShow: function () {
+        // 检查是否需要设置校区筛选
+        if (app.globalData.returnCampus) {
+            this.setCampus(app.globalData.returnCampus);
+            // 清空全局参数，避免重复应用
+            app.globalData.returnCampus = null;
+        }
         
-        // 处理URL参数中的筛选条件
-        if (options.filterType && options.filterValue) {
-            const filterType = options.filterType;
-            const filterValue = decodeURIComponent(options.filterValue);
-            
-            if (filterType === 'campus' && this.setCampus) {
-                // 延迟执行，确保transport_data完成后再调用
-                setTimeout(() => {
-                    this.setCampus(filterValue);
-                }, 100);
-            } else if (filterType === 'provider' && this.setProvider) {
-                // 延迟执行，确保transport_data完成后再调用
-                setTimeout(() => {
-                    this.setProvider(filterValue);
-                }, 100);
-            }
+        // 检查是否需要设置运营商筛选
+        if (app.globalData.returnProvider) {
+            this.setProvider(app.globalData.returnProvider);
+            // 清空全局参数，避免重复应用
+            app.globalData.returnProvider = null;
         }
     }
 })

@@ -128,16 +128,22 @@ Page({
   // 点击校区卡片跳转回首页并选择该校区
   navigateToIndexWithCampus: function () {
     const campus = this.data.station.campus_name;
-    wx.redirectTo({
-      url: '/pages/index/index?filterType=campus&filterValue=' + encodeURIComponent(campus)
+    // 将校区信息存储到全局状态
+    app.globalData.returnCampus = campus;
+    // 跳转到首页Tab
+    wx.switchTab({
+      url: '/pages/index/index'
     });
   },
   
   // 点击运营商卡片跳转回首页并选择该运营商
   navigateToIndexWithProvider: function () {
     const provider = this.data.station.provider;
-    wx.redirectTo({
-      url: '/pages/index/index?filterType=provider&filterValue=' + encodeURIComponent(provider)
+    // 将运营商信息存储到全局状态
+    app.globalData.returnProvider = provider;
+    // 跳转到首页Tab
+    wx.switchTab({
+      url: '/pages/index/index'
     });
   }
 });
