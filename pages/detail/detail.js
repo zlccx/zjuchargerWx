@@ -1,5 +1,7 @@
 // detail.js
 const app = getApp();
+const store = app.getStore();
+import { deepCopy } from '../../utils/common';
 
 Page({
   data: {
@@ -12,8 +14,7 @@ Page({
     const stationData = JSON.parse(options.station);
     
     // 检查当前充电桩是否已收藏
-    const likeStations = app.globalData.likeStations;
-    const isLiked = likeStations.some(item => item.hash_id === stationData.hash_id);
+    const isLiked = store.isFavorite(stationData.hash_id);
     stationData.like = isLiked;
     
     this.setData({
@@ -42,50 +43,22 @@ Page({
     });
   },
 
-  // 深拷贝函数
-  deepCopy(obj) {
-    if (obj === null || typeof obj !== 'object') {
-      return obj;
-    }
-    if (obj instanceof Date) {
-      return new Date(obj.getTime());
-    }
-    if (obj instanceof Array) {
-      return obj.map(item => this.deepCopy(item));
-    }
-    if (typeof obj === 'object') {
-      const clonedObj = {};
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          clonedObj[key] = this.deepCopy(obj[key]);
-        }
-      }
-      return clonedObj;
-    }
-  },
-
   // 收藏按钮点击事件
   toggleFavorite: function () {
     let station = this.data.station;
     let isLiked = false;
-    let likeStations = app.globalData.likeStations;
     
     // 检查当前充电桩是否已收藏
-    const index = likeStations.findIndex(item => item.hash_id === station.hash_id);
-    
-    if (index === -1) {
-      // 未收藏，添加到收藏数组（深拷贝）
-      const clonedStation = this.deepCopy(station);
-      likeStations.push(clonedStation);
-      isLiked = true;
-    } else {
+    if (store.isFavorite(station.hash_id)) {
       // 已收藏，从收藏数组中移除
-      likeStations.splice(index, 1);
+      store.removeFavorite(station.hash_id);
       isLiked = false;
+    } else {
+      // 未收藏，添加到收藏数组（深拷贝）
+      const clonedStation = deepCopy(station);
+      store.addFavorite(clonedStation);
+      isLiked = true;
     }
-    
-    // 更新全局收藏数组
-    app.globalData.likeStations = likeStations;
     
     // 更新当前页面的station对象的like状态（仅用于UI显示）
     station.like = isLiked;
@@ -128,8 +101,8 @@ Page({
   // 点击校区卡片跳转回首页并选择该校区
   navigateToIndexWithCampus: function () {
     const campus = this.data.station.campus_name;
-    // 将校区信息存储到全局状态
-    app.globalData.returnCampus = campus;
+    // 将校区信息存储到store
+    store.setFilter({ campus: campus });
     // 跳转到首页Tab
     wx.switchTab({
       url: '/pages/index/index'
@@ -139,8 +112,8 @@ Page({
   // 点击运营商卡片跳转回首页并选择该运营商
   navigateToIndexWithProvider: function () {
     const provider = this.data.station.provider;
-    // 将运营商信息存储到全局状态
-    app.globalData.returnProvider = provider;
+    // 将运营商信息存储到store
+    store.setFilter({ provider: provider });
     // 跳转到首页Tab
     wx.switchTab({
       url: '/pages/index/index'

@@ -9,7 +9,6 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     align-items: center;
     background-color: #f8f9fa;
 }
@@ -46,7 +45,6 @@
 .info-header {
     display: flex;
     justify-content: center;
-    align-items: center;
     padding-bottom: 30rpx;
     position: relative;
 }
@@ -90,8 +88,6 @@
 
 /* 信息内容 */
 .info-content {
-    display: flex;
-    flex-direction: column;
 }
 
 /* 卡片容器 - Grid布局 */
@@ -220,7 +216,6 @@
     border-radius: 20rpx;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 100%;
 }
 
 .navigation-item:active {
