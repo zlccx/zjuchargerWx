@@ -2,6 +2,17 @@
     padding-top: 30rpx;
     min-height: 100vh;
     background-color: #f5f5f5;
+    position: relative;
+}
+
+.version-tag {
+    margin: 10rpx 20rpx;
+    font-size: 24rpx;
+    color: #999;
+    background-color: #fff;
+    padding: 8rpx 16rpx;
+    border-radius: 20rpx;
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
 }
 
 .first_line {
@@ -20,7 +31,7 @@
 }
 
 .first_line .station-tip {
-    margin: 10rpx 25rpx 10rpx 0; 
+    margin: 10rpx auto 10rpx 0; 
     font-size: 28rpx;
     color: #666;
     padding: 20rpx;
