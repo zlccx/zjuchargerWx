@@ -1,8 +1,5 @@
 // detail.js
-const app = getApp();
-const store = app.getStore();
-import { deepCopy } from '../../utils/common';
-
+import store from '@/store/index';
 Page({
     data: {
         station: {},
@@ -55,7 +52,7 @@ Page({
             isLiked = false;
         } else {
             // 未收藏，添加到收藏数组（深拷贝）
-            const clonedStation = deepCopy(station);
+            const clonedStation = JSON.parse(JSON.stringify(station));
             store.addFavorite(clonedStation);
             isLiked = true;
         }
