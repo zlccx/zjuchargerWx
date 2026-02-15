@@ -39,7 +39,10 @@ Page({
             let stations = status.stations;
             for (let i = 0; i < stations.length; i++) {
                 let u = stations[i];
-                [u.lon, u.lat] = bd09ToGcj02(u.lon, u.lat);
+                if (!u.fixed) {
+                    [u.lon, u.lat] = bd09ToGcj02(u.lon, u.lat);
+                    u.fixed = true;
+                }
                 stations[i].dist = 
                     calculateDistance(u.lat, u.lon, user_location.latitude, user_location.longitude);
                 // 添加view属性，初始值为true
