@@ -17,7 +17,7 @@
     <view class="station-tip">
       <text>收藏了 {{favoriteStations.length}} 个充电桩</text>
     </view>
-    <view class="version-tag">v1.0.4</view>
+    <view class="version-tag">v1.0.5</view>
     <view class="sort-btn" bindtap="changeSort">
       <text>{{sortText[sortBy]}}</text>
     </view>

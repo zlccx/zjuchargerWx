@@ -39,5 +39,8 @@
         "scope.userLocation": {
             "desc": "您的位置信息仅用于计算充电桩与您的距离"
         }
+    },
+    "resolveAlias": {
+        "@/*": "/*"
     }
 }
