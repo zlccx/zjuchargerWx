@@ -22,7 +22,12 @@ const initialState = {
   filter: {
     campus: null,
     provider: null
-  }
+  },
+  
+  // 消息提醒相关
+  notificationEnabled: false, // 消息提醒是否开启
+  stationStatusHistory: {}, // 充电桩历史状态记录
+  notificationTimer: null // 定时检测定时器
 };
 
 // 状态存储
@@ -139,6 +144,45 @@ export const store = {
   
   resetFilter() {
     this.setState({ filter: { campus: null, provider: null } });
+  },
+  
+  // 消息提醒相关方法
+  setNotificationEnabled(enabled) {
+    this.setState({ notificationEnabled: enabled });
+    // 同时保存到本地存储
+    try {
+      wx.setStorageSync('notificationEnabled', enabled);
+    } catch (error) {
+      console.error('保存消息提醒状态失败:', error);
+    }
+  },
+  
+  getNotificationEnabled() {
+    return state.notificationEnabled;
+  },
+  
+  // 充电桩状态历史相关方法
+  setStationStatusHistory(history) {
+    this.setState({ stationStatusHistory: history });
+  },
+  
+  updateStationStatusHistory(stationId, status) {
+    const newHistory = { ...state.stationStatusHistory };
+    newHistory[stationId] = status;
+    this.setStationStatusHistory(newHistory);
+  },
+  
+  getStationStatusHistory() {
+    return state.stationStatusHistory;
+  },
+  
+  // 定时器相关方法
+  setNotificationTimer(timer) {
+    this.setState({ notificationTimer: timer });
+  },
+  
+  getNotificationTimer() {
+    return state.notificationTimer;
   }
 };
 

@@ -15,6 +15,46 @@
     box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
 }
 
+/* 消息提醒设置 */
+.notification-setting {
+    margin: 0 20rpx 20rpx;
+    padding: 25rpx;
+    background-color: #fff;
+    border-radius: 10rpx;
+    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.setting-header {
+    margin-bottom: 20rpx;
+}
+
+.setting-title {
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 5rpx;
+}
+
+.setting-desc {
+    font-size: 24rpx;
+    color: #666;
+    display: block;
+}
+
+.toggle-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10rpx;
+}
+
+.toggle-label {
+    font-size: 28rpx;
+    color: #666;
+    margin-left: 20rpx;
+}
+
 .first_line {
     display: flex;
     align-items: center;

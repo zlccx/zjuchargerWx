@@ -1,5 +1,17 @@
 <!--pages/user/user.wxml-->
 <view class="user-container">
+  <!-- 消息提醒设置 -->
+  <view class="notification-setting">
+    <view class="setting-header">
+      <text class="setting-title">消息提醒</text>
+      <text class="setting-desc">当收藏的充电桩有空闲时通知我</text>
+    </view>
+    <view class="toggle-container">
+      <switch checked="{{notificationEnabled}}" bindchange="toggleNotification" color="#4CAF50" />
+      <text class="toggle-label">{{notificationEnabled ? '已开启' : '已关闭'}}</text>
+    </view>
+  </view>
+  
   <!-- 第一行的提示信息 -->
   <view class="first_line">
     <view class="station-tip">
