@@ -10,6 +10,7 @@ Page({
         sortBy: 0, // 排序方式：0-智能排序，1-按距离排序，2-按空位排序
         sortText: ['智能排序', '按距离排序', '按空位排序'],
         notificationEnabled: false, // 消息提醒是否开启
+        subscriptionStatus: 'none' // 订阅状态：none-未订阅，active-生效中，used-已使用
     },
 
     onLoad(options) {
@@ -21,12 +22,54 @@ Page({
         // 每次显示页面时重新加载收藏列表
         this.loadFavoriteStations();
         this.loadNotificationStatus();
+        this.checkSubscriptionStatus();
     },
 
     // 加载消息提醒状态
     loadNotificationStatus() {
         const notificationEnabled = store.getNotificationEnabled();
         this.setData({ notificationEnabled: notificationEnabled });
+    },
+
+    // 检查订阅状态
+    checkSubscriptionStatus() {
+        wx.cloud.callFunction({
+            name: 'getUserInfo'
+        }).then(res => {
+            if (res.result.success) {
+                const subscribes = res.result.subscribes;
+                const activeSubscribe = subscribes.find(s => s.status === 'active');
+                
+                // 如果没有活跃的订阅，但开关是开启的
+                if (!activeSubscribe && this.data.notificationEnabled) {
+                    wx.showModal({
+                        title: '订阅已失效',
+                        content: '您的订阅已使用完毕，是否重新授权继续接收提醒？',
+                        confirmText: '重新授权',
+                        cancelText: '稍后再说',
+                        success: (modalRes) => {
+                            if (modalRes.confirm) {
+                                // 重新授权
+                                this.toggleNotification({ detail: { value: true }});
+                            } else {
+                                // 关闭开关
+                                store.setNotificationEnabled(false);
+                                this.setData({ 
+                                    notificationEnabled: false,
+                                    subscriptionStatus: 'used'
+                                });
+                            }
+                        }
+                    });
+                } else if (activeSubscribe) {
+                    this.setData({ subscriptionStatus: 'active' });
+                } else {
+                    this.setData({ subscriptionStatus: 'none' });
+                }
+            }
+        }).catch(err => {
+            console.error('获取订阅状态失败:', err);
+        });
     },
 
     // 切换消息提醒状态
@@ -59,7 +102,10 @@ Page({
                         }).then(subRes => {
                             if (subRes.result.success) {
                                 store.setNotificationEnabled(true);
-                                this.setData({ notificationEnabled: true });
+                                this.setData({ 
+                                    notificationEnabled: true,
+                                    subscriptionStatus: 'active'
+                                });
                                 wx.showToast({ title: '消息提醒已开启', icon: 'success' });
                             } else {
                                 this.setData({ notificationEnabled: false });
@@ -83,7 +129,10 @@ Page({
             });
         } else {
             store.setNotificationEnabled(false);
-            this.setData({ notificationEnabled: false });
+            this.setData({ 
+                notificationEnabled: false,
+                subscriptionStatus: 'none'
+            });
             wx.showToast({ title: '消息提醒已关闭', icon: 'success' });
         }
     },
@@ -100,6 +149,7 @@ Page({
     // 页面相关事件处理函数--监听用户下拉动作
     onPullDownRefresh() {
         this.loadFavoriteStations();
+        this.checkSubscriptionStatus();
         wx.stopPullDownRefresh();
     },
 

@@ -4,6 +4,8 @@ cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV
 })
 
+const db = cloud.database()
+
 exports.main = async (event, context) => {
   const { notifications } = event
 
@@ -42,6 +44,21 @@ exports.main = async (event, context) => {
         })
 
         console.log('发送成功:', stationName, openid)
+
+        // 发送成功后，标记订阅为已使用
+        await db.collection('subscribes')
+          .where({
+            _openid: openid,
+            templateId: templateId,
+            status: 'active'
+          })
+          .update({
+            data: {
+              status: 'used',
+              usedTime: new Date()
+            }
+          })
+
       } catch (error) {
         console.error('发送失败:', stationName, openid, error)
         results.push({
