@@ -42,5 +42,6 @@
     },
     "resolveAlias": {
         "@/*": "/*"
-    }
+    },
+    "cloud": true
 }
