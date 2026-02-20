@@ -21,7 +21,7 @@ exports.main = async (event, context) => {
           templateId: templateId,
           page: 'pages/index/index',
           data: {
-            date1: {
+            time1: {
               value: new Date().toLocaleString('zh-CN', {
                 year: 'numeric',
                 month: '2-digit',
