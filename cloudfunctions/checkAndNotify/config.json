@@ -3,5 +3,10 @@
     "name": "checkAndNotifyTimer",
     "type": "timer",
     "config": "0 */3 * * * * *"
-  }]
+  }],
+  "permissions": {
+    "openapi": [
+      "subscribeMessage.send"
+    ]
+  }
 }
