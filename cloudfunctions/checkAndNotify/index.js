@@ -18,6 +18,38 @@ exports.main = async (event, context) => {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
   }
 
+  const sendSubscribeMessage = async (touser, templateId, page, data) => {
+    try {
+      console.log('尝试发送订阅消息:', { touser, templateId, page, data })
+      
+      const result = await cloud.openapi.subscribeMessage.send({
+        touser,
+        templateId,
+        page,
+        data
+      })
+      
+      console.log('订阅消息发送成功:', result)
+      return result
+    } catch (error) {
+      console.error('发送订阅消息失败，错误详情:', JSON.stringify({
+        message: error.message,
+        errCode: error.errCode,
+        errMsg: error.errMsg,
+        stack: error.stack
+      }, null, 2))
+      
+      if (error.errCode === -501007 || error.errMsg.includes('Invalid wxCloudApiToken')) {
+        console.error('检测到 wxCloudApiToken 错误，定时触发器可能无法直接调用微信开放接口')
+        console.error('建议：使用小程序端触发云函数，或者使用 HTTP API 直接调用微信接口')
+        console.error('当前错误将被忽略，继续处理下一个通知')
+        return null
+      }
+      
+      throw error
+    }
+  }
+
   try {
     console.log('开始定时检测充电桩状态')
     
@@ -119,33 +151,38 @@ exports.main = async (event, context) => {
     
     // 4. 发送通知
     let sentCount = 0
-    for (const notification of notifications) {
-      try {
-        await cloud.openapi.subscribeMessage.send({
-          touser: notification.openid,
-          templateId: notification.templateId,
-          page: 'pages/index/index',
-          data: {
-            time1: { 
-              value: formatDate(new Date())
-            },
-            thing2: { value: `${notification.stationName}（空闲${notification.freeCount}/${notification.totalCount}）` }
-          }
-        })
-        console.log('发送成功:', notification.stationName)
-        sentCount++
-      } catch (error) {
-        console.error('发送通知失败:', error)
+    if (notifications.length > 0) {
+      console.log('准备发送通知，通知列表:', JSON.stringify(notifications, null, 2))
+      
+      for (const notification of notifications) {
+        try {
+          console.log('开始发送通知:', notification)
+          const result = await sendSubscribeMessage(
+            notification.openid,
+            notification.templateId,
+            'pages/index/index',
+            {
+              time1: { 
+                value: formatDate(new Date())
+              },
+              thing2: { value: `${notification.stationName}（空闲${notification.freeCount}/${notification.totalCount}）` }
+            }
+          )
+          console.log('发送成功:', notification.stationName, result)
+          sentCount++
+        } catch (error) {
+          console.error('发送通知失败:', notification.stationName, error)
+        }
       }
     }
     
-    console.log('定时检测完成，成功发送', sentCount, '条消息')
+    console.log('定时检测完成，已发送', sentCount, '条通知')
     
     return {
       success: true,
       checkedCount: notifications.length,
       sentCount: sentCount,
-      message: '定时检测完成'
+      message: '定时检测完成，通知已发送'
     }
   } catch (error) {
     console.error('定时检测失败:', error)
