@@ -8,11 +8,12 @@ Page({
         pageCount: null,
         sortBy: 0,
         sortText: ['智能排序', '按距离排序', '按空位排序'],
-        selectedCampusIndex: 0, // 默认选中全部
-        selectedCampus: '全部', // 选中的校区名称
-        selectedProviderIndex: 0, // 默认选中全部
-        selectedProvider: '全部', // 选中的运营商名称
-        searchText: '', // 搜索文本
+        selectedCampusIndex: 0,
+        selectedCampus: '全部',
+        selectedProviderIndex: 0,
+        selectedProvider: '全部',
+        searchText: '',
+        showBackToTop: false,
     },
     
     // 根据校区和运营商筛选充电桩
@@ -138,5 +139,19 @@ Page({
     async onPullDownRefresh() {
         await store.processData();
         wx.stopPullDownRefresh();
+    },
+
+    onPageScroll(e) {
+        const scrollTop = e.scrollTop;
+        this.setData({
+            showBackToTop: scrollTop > 500
+        });
+    },
+
+    scrollToTop() {
+        wx.pageScrollTo({
+            scrollTop: 0,
+            duration: 300
+        });
     }
 })

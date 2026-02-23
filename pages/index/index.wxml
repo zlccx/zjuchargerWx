@@ -49,3 +49,8 @@
         </view>
     </block>
 </view>
+
+<!-- 回到顶部按钮 -->
+<view class="back-to-top" wx:if="{{showBackToTop}}" bindtap="scrollToTop">
+    <text class="back-to-top-icon">↑</text>
+</view>

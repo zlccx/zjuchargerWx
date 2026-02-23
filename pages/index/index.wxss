@@ -125,3 +125,24 @@
     font-size: 28rpx;
 }
 
+.back-to-top {
+    position: fixed;
+    right: 30rpx;
+    bottom: 100rpx;
+    width: 80rpx;
+    height: 80rpx;
+    background-color: rgba(26, 173, 25, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+    z-index: 999;
+}
+
+.back-to-top-icon {
+    color: white;
+    font-size: 40rpx;
+    font-weight: bold;
+}
+
