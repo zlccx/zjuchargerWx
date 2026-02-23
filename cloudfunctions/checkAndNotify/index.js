@@ -7,6 +7,44 @@ cloud.init({
 
 const db = cloud.database()
 
+let accessTokenCache = {
+  token: null,
+  expireTime: 0
+}
+
+const getAccessToken = async () => {
+  try {
+    const now = Date.now()
+    
+    if (accessTokenCache.token && now < accessTokenCache.expireTime) {
+      console.log('使用缓存的 access_token')
+      return accessTokenCache.token
+    }
+    
+    console.log('获取新的 access_token')
+    
+    const result = await axios.get('https://api.weixin.qq.com/cgi-bin/token', {
+      params: {
+        grant_type: 'client_credential',
+        appid: process.env.WX_APPID,
+        secret: process.env.WX_APPSECRET
+      }
+    })
+    
+    if (result.data.access_token) {
+      accessTokenCache.token = result.data.access_token
+      accessTokenCache.expireTime = now + (result.data.expires_in - 300) * 1000
+      console.log('access_token 获取成功')
+      return result.data.access_token
+    } else {
+      throw new Error('获取 access_token 失败: ' + JSON.stringify(result.data))
+    }
+  } catch (error) {
+    console.error('获取 access_token 异常:', error)
+    throw error
+  }
+}
+
 exports.main = async (event, context) => {
   const formatDate = (date) => {
     const year = date.getFullYear()
@@ -22,15 +60,26 @@ exports.main = async (event, context) => {
     try {
       console.log('尝试发送订阅消息:', { touser, templateId, page, data })
       
-      const result = await cloud.openapi.subscribeMessage.send({
-        touser,
-        templateId,
-        page,
-        data
-      })
+      const accessToken = await getAccessToken()
       
-      console.log('订阅消息发送成功:', result)
-      return result
+      const result = await axios.post(
+        `https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=${accessToken}`,
+        {
+          touser,
+          template_id: templateId,
+          page,
+          miniprogram_state: 'developer',
+          lang: 'zh_CN',
+          data
+        }
+      )
+      
+      if (result.data.errcode === 0) {
+        console.log('订阅消息发送成功:', result.data)
+        return result.data
+      } else {
+        throw new Error(`发送订阅消息失败: errcode=${result.data.errcode}, errmsg=${result.data.errmsg}`)
+      }
     } catch (error) {
       console.error('发送订阅消息失败，错误详情:', JSON.stringify({
         message: error.message,
@@ -38,13 +87,6 @@ exports.main = async (event, context) => {
         errMsg: error.errMsg,
         stack: error.stack
       }, null, 2))
-      
-      if (error.errCode === -501007 || error.errMsg.includes('Invalid wxCloudApiToken')) {
-        console.error('检测到 wxCloudApiToken 错误，定时触发器可能无法直接调用微信开放接口')
-        console.error('建议：使用小程序端触发云函数，或者使用 HTTP API 直接调用微信接口')
-        console.error('当前错误将被忽略，继续处理下一个通知')
-        return null
-      }
       
       throw error
     }
@@ -127,15 +169,30 @@ exports.main = async (event, context) => {
           }
           
           // 更新历史状态
-          await db.collection('stationHistory').add({
-            data: {
-              stationId: stationId,
-              _openid: _openid,
-              free: station.free,
-              total: station.total,
-              createTime: new Date()
-            }
-          })
+          if (historyStatus.data.length > 0) {
+            // 存在历史记录，更新它
+            const historyId = historyStatus.data[0]._id
+            await db.collection('stationHistory').doc(historyId).update({
+              data: {
+                free: station.free,
+                total: station.total,
+                createTime: new Date()
+              }
+            })
+            console.log('历史状态已更新:', stationId, _openid)
+          } else {
+            // 不存在历史记录，添加新记录
+            await db.collection('stationHistory').add({
+              data: {
+                stationId: stationId,
+                _openid: _openid,
+                free: station.free,
+                total: station.total,
+                createTime: new Date()
+              }
+            })
+            console.log('历史状态已添加:', stationId, _openid)
+          }
         } else {
           console.log('未找到充电桩:', stationId)
         }
