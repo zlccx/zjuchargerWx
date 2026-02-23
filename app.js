@@ -8,6 +8,21 @@ App({
                 env: 'cloud1-3gme0izs286a5b2a'
             });
 
+            // 统计URL变量
+            const countURL = '127.0.0.1';
+
+            // 统计小程序启动次数
+            wx.request({
+                url: `http://${countURL}:3000/api/launch`,
+                method: 'GET',
+                success: (res) => {
+                    console.log('启动统计成功:', res.data);
+                },
+                fail: (err) => {
+                    console.error('启动统计失败:', err);
+                }
+            });
+
             store.processData();
             // 从本地存储加载收藏数据
             const favoriteStations = wx.getStorageSync('favoriteStations');
