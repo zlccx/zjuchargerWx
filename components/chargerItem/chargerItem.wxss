@@ -69,3 +69,9 @@
     background-color: #fff1f0;
     color: #ff4d4f;
 }
+
+.card.selected {
+    background-color: #e6f7ff;
+    border: 2rpx solid #1890ff;
+    box-shadow: 0 2rpx 10rpx rgba(24, 144, 255, 0.2);
+}

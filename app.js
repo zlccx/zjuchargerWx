@@ -24,10 +24,23 @@ App({
             });
 
             store.processData();
-            // 从本地存储加载收藏数据
+            // 从本地存储加载收藏数据，处理兼容性
             const favoriteStations = wx.getStorageSync('favoriteStations');
             if (favoriteStations) {
-                store.setFavoriteStations(favoriteStations);
+                // 检查是否为旧格式（对象数组），如果是则转换为新格式（hash_id数组）
+                if (Array.isArray(favoriteStations) && favoriteStations.length > 0) {
+                    if (typeof favoriteStations[0] === 'object') {
+                        // 旧格式，转换为只保存hash_id
+                        const favoriteIds = favoriteStations.map(station => station.hash_id);
+                        store.setFavoriteStations(favoriteIds);
+                    } else {
+                        // 新格式，直接使用
+                        store.setFavoriteStations(favoriteStations);
+                    }
+                } else {
+                    // 空数组，直接使用
+                    store.setFavoriteStations(favoriteStations);
+                }
             }
 
             // 从本地存储加载消息提醒状态

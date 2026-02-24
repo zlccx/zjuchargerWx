@@ -51,9 +51,8 @@ Page({
             store.removeFavorite(station.hash_id);
             isLiked = false;
         } else {
-            // 未收藏，添加到收藏数组（深拷贝）
-            const clonedStation = JSON.parse(JSON.stringify(station));
-            store.addFavorite(clonedStation);
+            // 未收藏，添加到收藏数组（只保存hash_id）
+            store.addFavorite(station);
             isLiked = true;
         }
 
@@ -114,6 +113,14 @@ Page({
         // 跳转到首页Tab
         wx.switchTab({
             url: '/pages/index/index'
+        });
+    },
+
+    // 跳转到设备详情页面
+    navigateToDetailPlus: function () {
+        const station = this.data.station;
+        wx.navigateTo({
+            url: '/pages/detailPlus/detailPlus?station=' + JSON.stringify(station)
         });
     }
 });

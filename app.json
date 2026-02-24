@@ -2,7 +2,8 @@
     "pages": [
         "pages/index/index",
         "pages/user/user",
-        "pages/detail/detail"
+        "pages/detail/detail",
+        "pages/detailPlus/detailPlus"
     ],
     "tabBar": {
         "color": "#919996",
