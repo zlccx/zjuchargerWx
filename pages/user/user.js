@@ -226,8 +226,8 @@ Page({
         const enabled = e.detail.value;
 
         if (enabled) {
-            const favoriteStations = store.getState().favoriteStations;
-            const stationIds = favoriteStations.map(station => station.hash_id);
+            // 直接使用store中的收藏hash_id列表
+            const stationIds = store.getState().favoriteStations;
 
             if (stationIds.length === 0) {
                 this.setData({ notificationEnabled: false });
@@ -308,8 +308,16 @@ Page({
             loading: true
         });
 
-        // 直接使用store中的收藏列表
-        let favoriteStations = store.getState().favoriteStations;
+        // 从store获取收藏的hash_id列表
+        const favoriteIds = store.getState().favoriteStations;
+        // 从store获取所有stations数据
+        const allStations = store.getState().stations || [];
+        
+        // 根据收藏的hash_id列表，从stations中筛选出对应的完整station对象
+        let favoriteStations = [];
+        if (favoriteIds.length > 0 && allStations.length > 0) {
+            favoriteStations = allStations.filter(station => favoriteIds.includes(station.hash_id));
+        }
 
         // 对收藏列表进行排序
         let sortedStations = sortStations(favoriteStations, this.data.sortBy);

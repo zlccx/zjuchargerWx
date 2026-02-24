@@ -12,7 +12,7 @@ const initialState = {
     stations: null,
     originalStations: null,
 
-    // 收藏列表
+    // 收藏列表（只保存hash_id）
     favoriteStations: [],
 
     // 筛选条件
@@ -41,7 +41,7 @@ let state = JSON.parse(JSON.stringify(initialState));
 export const store = {
     getStatus() {  // request 不支持 Promise 风格，需要手动封装
         return new Promise((resolve, reject) => wx.request({
-            url: 'https://charger.philfan.cn/api/status',
+            url: 'http://127.0.0.1:8000/api/status',
             success: (res) => {
                 console.log('app.js - 成功获得充电桩状态');
                 resolve(res.data);
@@ -145,13 +145,12 @@ export const store = {
         this.setState({ favoriteStations: stations });
     },
 
-    // 添加收藏
+    // 添加收藏（只保存hash_id）
     addFavorite(station) {
-        const isExist = state.favoriteStations.some(
-            (item) => item.hash_id === station.hash_id,
-        );
+        const hashId = station.hash_id;
+        const isExist = state.favoriteStations.includes(hashId);
         if (!isExist) {
-            const newFavorites = [...state.favoriteStations, station];
+            const newFavorites = [...state.favoriteStations, hashId];
             this.setFavoriteStations(newFavorites);
             return true;
         }
@@ -161,7 +160,7 @@ export const store = {
     // 移除收藏
     removeFavorite(hashId) {
         const newFavorites = state.favoriteStations.filter(
-            (item) => item.hash_id !== hashId,
+            (item) => item !== hashId,
         );
         if (newFavorites.length !== state.favoriteStations.length) {
             this.setFavoriteStations(newFavorites);
@@ -172,7 +171,7 @@ export const store = {
 
     // 检查是否已收藏
     isFavorite(hashId) {
-        return state.favoriteStations.some((item) => item.hash_id === hashId);
+        return state.favoriteStations.includes(hashId);
     },
 
     // 筛选条件相关方法

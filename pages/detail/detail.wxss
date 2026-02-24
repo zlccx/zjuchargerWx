@@ -234,6 +234,30 @@
     font-weight: bold;
 }
 
+/* 跳转到设备详情页面按钮 */
+.detail-plus-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40rpx;
+    background-color: #1989fa;
+    color: white;
+    padding: 25rpx 0;
+    border-radius: 20rpx;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.detail-plus-btn:active {
+    background-color: #0c7cec;
+    transform: scale(0.98);
+}
+
+.btn-text {
+    font-size: 30rpx;
+    font-weight: bold;
+}
+
 /* 响应式设计 */
 @media (max-width: 375px) {
     .station-name {
@@ -259,6 +283,10 @@
     }
 
     .navigation-item .nav-text {
+        font-size: 28rpx;
+    }
+
+    .btn-text {
         font-size: 28rpx;
     }
 }

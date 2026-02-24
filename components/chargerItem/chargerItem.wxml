@@ -1,4 +1,4 @@
-<view class="card" data-id="{{item.hash_id}}" data-item="{{item}}" bindtap="onCardClick">
+<view class="card {{selected ? 'selected' : ''}}" data-id="{{item.hash_id}}" data-item="{{item}}" bindtap="onCardClick">
     <view class="station-header">
         <view class="station-name">{{item.name}}</view>
         <view class="station-status">

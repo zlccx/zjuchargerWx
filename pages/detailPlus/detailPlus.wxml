@@ -1,0 +1,31 @@
+<!--pages/detailPlus/detailPlus.wxml-->
+<view class="detail-plus-container">
+    <!-- 地图区域 -->
+    <view class="map-container">
+        <map id="map" longitude="{{station.lon}}" latitude="{{station.lat}}" class="map" show-location="true"
+            markers="{{markers}}" bindmarkertap="onMarkerTap" />
+    </view>
+
+    <!-- 设备列表区域 -->
+    <view class="devices-container">
+        <view class="section-title">
+            <text>设备列表</text>
+        </view>
+        <view class="devices-list">
+            <block wx:for="{{devices}}" wx:key="id">
+                <charger-item item="{{item}}" selected="{{selectedDevice && selectedDevice.id === item.id}}" bind:cardtap="onDeviceClick" />
+            </block>
+        </view>
+        
+        <!-- 导航和提交位置按钮 -->
+        <view class="action-buttons">
+            <view class="navigation-btn" bindtap="openNavigation">
+                <image src="/imgs/navigation.png" class="nav-icon"></image>
+                <text class="nav-text">{{selectedDevice ? '导航到该设备' : '导航到站点'}}</text>
+            </view>
+            <view class="submit-location-btn" bindtap="submitLocation" wx:if="{{selectedDevice}}">
+                <text class="submit-text">提交位置</text>
+            </view>
+        </view>
+    </view>
+</view>

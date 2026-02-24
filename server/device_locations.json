@@ -1,0 +1,72 @@
+{
+  "1": {
+    "deviceId": "1",
+    "stationId": "test-station",
+    "locations": [
+      {
+        "latitude": 39.9087,
+        "longitude": 116.3975,
+        "timestamp": "2026-02-23T11:55:16.710Z"
+      }
+    ],
+    "fittedLocation": {
+      "latitude": 39.9087,
+      "longitude": 116.3975
+    }
+  },
+  "196330": {
+    "deviceId": "196330",
+    "stationId": "0d52bb8e",
+    "locations": [
+      {
+        "latitude": 23.28592,
+        "longitude": 116.72664,
+        "timestamp": "2026-02-24T03:03:21.569Z"
+      },
+      {
+        "latitude": 23.28592,
+        "longitude": 116.72664,
+        "timestamp": "2026-02-24T03:23:03.626Z"
+      }
+    ],
+    "fittedLocation": {
+      "latitude": 23.28592,
+      "longitude": 116.72664
+    }
+  },
+  "50959101": {
+    "deviceId": "50959101",
+    "stationId": "7a6b703d",
+    "locations": [
+      {
+        "latitude": 23.28592,
+        "longitude": 116.72664,
+        "timestamp": "2026-02-24T03:12:00.127Z"
+      },
+      {
+        "latitude": 23.28592,
+        "longitude": 116.72664,
+        "timestamp": "2026-02-24T03:16:34.612Z"
+      }
+    ],
+    "fittedLocation": {
+      "latitude": 23.28592,
+      "longitude": 116.72664
+    }
+  },
+  "50959102": {
+    "deviceId": "50959102",
+    "stationId": "7a6b703d",
+    "locations": [
+      {
+        "latitude": 23.28592,
+        "longitude": 116.72664,
+        "timestamp": "2026-02-24T03:40:34.733Z"
+      }
+    ],
+    "fittedLocation": {
+      "latitude": 23.28592,
+      "longitude": 116.72664
+    }
+  }
+}
