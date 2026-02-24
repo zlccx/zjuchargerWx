@@ -69,6 +69,25 @@ Page({
             duration: 1000
         });
 
+        // 如果消息提醒已开启，同步更新订阅记录
+        const notificationEnabled = store.getNotificationEnabled();
+        if (notificationEnabled) {
+            const favoriteStations = store.getState().favoriteStations;
+            const stationIds = favoriteStations.map(s => s.hash_id);
+            
+            wx.cloud.callFunction({
+                name: 'subscribe',
+                data: {
+                    templateId: 'ppFGwoeA7oxrF0f69dZEYTje1AkUBKqGoq05hJIanYs',
+                    stationIds: stationIds
+                }
+            }).then(res => {
+                console.log('订阅记录已更新:', res.result);
+            }).catch(err => {
+                console.error('更新订阅记录失败:', err);
+            });
+        }
+
         // 更新上一个页面的数据（无论是index还是user页面）
         const pages = getCurrentPages();
         const prevPage = pages[pages.length - 2];
