@@ -2,27 +2,176 @@
 
 import { sortStations } from '@/utils/sort';
 import store from '@/store/index'
+import { setApiKey, getRecommendations } from '@/utils/ai'
 
 Page({
     data: {
-        favoriteStations: [], // 收藏的充电桩列表
-        loading: true, // 加载状态
-        sortBy: 0, // 排序方式：0-智能排序，1-按距离排序，2-按空位排序
+        favoriteStations: [],
+        loading: true,
+        sortBy: 0,
         sortText: ['智能排序', '按距离排序', '按空位排序'],
-        notificationEnabled: false, // 消息提醒是否开启
-        subscriptionStatus: 'none' // 订阅状态：none-未订阅，active-生效中，used-已使用
+        notificationEnabled: false,
+        subscriptionStatus: 'none',
+        preferredTimeSlots: [],
+        preferredCampuses: []
     },
 
     onLoad(options) {
         this.loadFavoriteStations();
         this.loadNotificationStatus();
+        this.loadUserPreferences();
     },
 
     onShow() {
-        // 每次显示页面时重新加载收藏列表
         this.loadFavoriteStations();
         this.loadNotificationStatus();
         this.checkSubscriptionStatus();
+        this.loadUserPreferences();
+    },
+
+    loadUserPreferences() {
+        const preferences = store.getUserPreferences();
+        this.setData({
+            preferredTimeSlots: preferences.preferredTimeSlots || [],
+            preferredCampuses: preferences.preferredCampuses || []
+        });
+    },
+
+    toggleTimeSlot(e) {
+        const slot = e.currentTarget.dataset.slot;
+        let timeSlots = [...this.data.preferredTimeSlots];
+        
+        if (timeSlots.includes(slot)) {
+            timeSlots = timeSlots.filter(s => s !== slot);
+        } else {
+            timeSlots.push(slot);
+        }
+        
+        this.setData({ preferredTimeSlots: timeSlots });
+        store.updatePreferredTimeSlots(timeSlots);
+        wx.showToast({
+            title: '偏好已更新',
+            icon: 'success'
+        });
+    },
+
+    toggleCampus(e) {
+        const campus = e.currentTarget.dataset.campus;
+        let campuses = [...this.data.preferredCampuses];
+        
+        if (campuses.includes(campus)) {
+            campuses = campuses.filter(c => c !== campus);
+        } else {
+            campuses.push(campus);
+        }
+        
+        this.setData({ preferredCampuses: campuses });
+        store.updatePreferredCampuses(campuses);
+        wx.showToast({
+            title: '偏好已更新',
+            icon: 'success'
+        });
+    },
+
+    getAIRecommendation() {
+        wx.showLoading({
+            title: '正在获取推荐...',
+            mask: true
+        });
+
+        wx.cloud.callFunction({
+            name: 'getRecommendationData',
+            data: { days: 30 }
+        }).then(res => {
+            if (res.result.success) {
+                const data = res.result.data;
+                
+                if (!getApiKey()) {
+                    wx.showModal({
+                        title: 'AI推荐数据已获取',
+                        content: '请将以下数据发送给AI进行分析：\n\n' + JSON.stringify(data, null, 2),
+                        confirmText: '复制数据',
+                        cancelText: '关闭',
+                        success: (modalRes) => {
+                            if (modalRes.confirm) {
+                                wx.setClipboardData({
+                                    data: JSON.stringify(data, null, 2),
+                                    success: () => {
+                                        wx.showToast({
+                                            title: '数据已复制',
+                                            icon: 'success'
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    return getRecommendations(data);
+                }
+            } else {
+                wx.showToast({
+                    title: '获取推荐数据失败',
+                    icon: 'none'
+                });
+            }
+        }).then(recommendations => {
+            if (recommendations) {
+                wx.cloud.callFunction({
+                    name: 'saveRecommendation',
+                    data: recommendations
+                }).then(() => {
+                    this.showRecommendationResult(recommendations);
+                }).catch(err => {
+                    console.error('保存推荐失败:', err);
+                    this.showRecommendationResult(recommendations);
+                });
+            }
+        }).catch(err => {
+            console.error('获取推荐失败:', err);
+            wx.showToast({
+                title: '获取推荐失败',
+                icon: 'none'
+            });
+        }).finally(() => {
+            wx.hideLoading();
+        });
+    },
+
+    showRecommendationResult(recommendations) {
+        let content = `推荐理由：${recommendations.reasoning}\n\n`;
+        
+        recommendations.recommendations.forEach((rec, index) => {
+            content += `${index + 1}. ${rec.stationName}\n`;
+            content += `   校区：${rec.campus}\n`;
+            content += `   推荐时间：${rec.recommendedTime}\n`;
+            content += `   推荐理由：${rec.reason}\n`;
+            content += `   评分：${rec.score}\n\n`;
+        });
+
+        wx.showModal({
+            title: 'AI推荐结果',
+            content: content,
+            showCancel: false,
+            confirmText: '知道了'
+        });
+    },
+
+    setApiKey() {
+        wx.showModal({
+            title: '设置DeepSeek API Key',
+            editable: true,
+            placeholderText: '请输入您的DeepSeek API Key',
+            success: (res) => {
+                if (res.confirm && res.content) {
+                    setApiKey(res.content);
+                    wx.showToast({
+                        title: 'API Key已设置',
+                        icon: 'success'
+                    });
+                }
+            }
+        });
     },
 
     // 加载消息提醒状态

@@ -7,20 +7,46 @@ Page({
     },
 
     onLoad(options) {
-        // 获取从上一个页面传递过来的充电桩数据
         const stationData = JSON.parse(options.station);
         console.log(stationData);
-        // 检查当前充电桩是否已收藏
         const isLiked = store.isFavorite(stationData.hash_id);
         stationData.like = isLiked;
 
         this.setData({
             station: stationData,
-            fromCampus: options.campus || '全部' // 接收从首页传递的校区信息
+            fromCampus: options.campus || '全部'
         });
 
-        // 初始化地图标记
         this.initMapMarker();
+        this.recordStationVisit(stationData);
+    },
+
+    recordStationVisit(station) {
+        try {
+            const visitRecord = {
+                stationId: station.hash_id,
+                stationName: station.name,
+                campus: station.campus_name,
+                provider: station.provider,
+                chargingDuration: 0,
+                chargingTime: new Date().toISOString()
+            };
+
+            wx.cloud.callFunction({
+                name: 'recordChargingHistory',
+                data: {
+                    action: 'add',
+                    ...visitRecord
+                }
+            }).then(res => {
+                console.log('记录访问成功:', res.result);
+                store.addChargingHistory(visitRecord);
+            }).catch(err => {
+                console.error('记录访问失败:', err);
+            });
+        } catch (error) {
+            console.error('记录访问出错:', error);
+        }
     },
 
     // 初始化地图标记
