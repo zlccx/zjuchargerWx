@@ -26,12 +26,7 @@ const initialState = {
     stationStatusHistory: {}, // 充电桩历史状态记录
     notificationTimer: null, // 定时检测定时器
 
-    // 用户偏好相关
-    userPreferences: {
-        preferredTimeSlots: [], // 偏好的充电时间段：['morning', 'afternoon', 'evening', 'night']
-        preferredCampuses: [], // 偏好的校区：['紫金港校区', '玉泉校区', '西溪校区', '华家池校区', '之江校区']
-        chargingHistory: [] // 充电历史记录
-    }
+
 };
 
 // 状态存储
@@ -222,55 +217,7 @@ export const store = {
         return state.notificationTimer;
     },
 
-    // 用户偏好相关方法
-    setUserPreferences(preferences) {
-        this.setState({ userPreferences: { ...state.userPreferences, ...preferences } });
-        this.saveUserPreferencesToStorage();
-    },
 
-    getUserPreferences() {
-        return state.userPreferences;
-    },
-
-    updatePreferredTimeSlots(timeSlots) {
-        this.setUserPreferences({ preferredTimeSlots: timeSlots });
-    },
-
-    updatePreferredCampuses(campuses) {
-        this.setUserPreferences({ preferredCampuses: campuses });
-    },
-
-    addChargingHistory(record) {
-        const newHistory = [...state.userPreferences.chargingHistory];
-        newHistory.push({
-            ...record,
-            timestamp: record.timestamp || new Date().toISOString()
-        });
-        this.setUserPreferences({ chargingHistory: newHistory });
-    },
-
-    getChargingHistory() {
-        return state.userPreferences.chargingHistory;
-    },
-
-    saveUserPreferencesToStorage() {
-        try {
-            wx.setStorageSync('userPreferences', state.userPreferences);
-        } catch (error) {
-            console.error('保存用户偏好失败:', error);
-        }
-    },
-
-    loadUserPreferencesFromStorage() {
-        try {
-            const savedPreferences = wx.getStorageSync('userPreferences');
-            if (savedPreferences) {
-                this.setState({ userPreferences: savedPreferences });
-            }
-        } catch (error) {
-            console.error('加载用户偏好失败:', error);
-        }
-    }
 };
 
 // 导出store实例

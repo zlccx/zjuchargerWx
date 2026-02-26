@@ -1,0 +1,68 @@
+<!--pages/ai-recommendation/ai-recommendation.wxml-->
+<view class="container">
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <text class="title">AI智能推荐</text>
+  </view>
+
+  <view class="content">
+    <!-- 校区选择 -->
+    <view class="section">
+      <text class="section-title">选择校区</text>
+      <view class="campus-list">
+        <view 
+          wx:for="{{campusList}}" 
+          wx:key="id"
+          class="campus-item {{selectedCampuses.includes(item.id) ? 'active' : ''}}"
+          bindtap="toggleCampus"
+          data-id="{{item.id}}"
+        >
+          <text>{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 时间段选择 -->
+    <view class="section">
+      <text class="section-title">选择时间段</text>
+      <view class="time-slot-list">
+        <view 
+          wx:for="{{timeSlotList}}" 
+          wx:key="id"
+          class="time-slot-item {{selectedTimeSlots.includes(item.id) ? 'active' : ''}}"
+          bindtap="toggleTimeSlot"
+          data-id="{{item.id}}"
+        >
+          <text>{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 充电时长设置 -->
+    <view class="section">
+      <text class="section-title">预计充电时长</text>
+      <view class="duration-slider">
+        <text class="duration-value">{{selectedDuration}} 分钟</text>
+        <slider 
+          min="15" 
+          max="180" 
+          step="15" 
+          value="{{selectedDuration}}" 
+          bindchange="changeDuration"
+          color="#07C160"
+        />
+      </view>
+    </view>
+
+    <!-- 生成推荐按钮 -->
+    <button 
+      class="generate-btn"
+      bindtap="generateRecommendation"
+      loading="{{loading}}"
+    >
+      生成推荐
+    </button>
+  </view>
+</view>

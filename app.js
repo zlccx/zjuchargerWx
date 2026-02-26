@@ -49,8 +49,7 @@ App({
                 store.setNotificationEnabled(notificationEnabled);
             }
 
-            // 从本地存储加载用户偏好
-            store.loadUserPreferencesFromStorage();
+
         } catch (error) {
             console.error('App launch error:', error);
             wx.showToast({

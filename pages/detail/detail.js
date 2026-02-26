@@ -40,7 +40,6 @@ Page({
                 }
             }).then(res => {
                 console.log('记录访问成功:', res.result);
-                store.addChargingHistory(visitRecord);
             }).catch(err => {
                 console.error('记录访问失败:', err);
             });

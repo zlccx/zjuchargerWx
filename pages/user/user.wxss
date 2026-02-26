@@ -46,69 +46,6 @@
     font-weight: bold;
 }
 
-/* 用户偏好设置 */
-.preference-setting {
-    margin: 0 20rpx 20rpx;
-    padding: 25rpx;
-    background-color: #fff;
-    border-radius: 10rpx;
-    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
-}
-
-.preference-item {
-    margin-top: 20rpx;
-    padding-top: 20rpx;
-    border-top: 1rpx solid #f0f0f0;
-}
-
-.preference-label {
-    font-size: 28rpx;
-    color: #333;
-    font-weight: 500;
-    display: block;
-    margin-bottom: 15rpx;
-}
-
-.time-slots {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15rpx;
-}
-
-.time-slot {
-    padding: 15rpx 30rpx;
-    background-color: #f5f5f5;
-    border-radius: 25rpx;
-    font-size: 26rpx;
-    color: #666;
-    transition: all 0.3s;
-}
-
-.time-slot.active {
-    background-color: #667eea;
-    color: #fff;
-}
-
-.campus-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10rpx;
-}
-
-.campus-item {
-    padding: 12rpx 24rpx;
-    background-color: #f5f5f5;
-    border-radius: 20rpx;
-    font-size: 26rpx;
-    color: #666;
-    transition: all 0.3s;
-}
-
-.campus-item.active {
-    background-color: #667eea;
-    color: #fff;
-}
-
 .version-tag {
     margin: 10rpx 20rpx;
     font-size: 24rpx;
