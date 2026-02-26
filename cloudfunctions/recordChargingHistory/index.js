@@ -9,7 +9,7 @@ const _ = db.command
 
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
-  const { action, stationId, stationName, campus, provider, chargingDuration, chargingTime } = event
+  const { action, stationId, stationName, campus, provider, chargingDuration, chargingTime, stationIds } = event
 
   try {
     const { OPENID } = wxContext
@@ -37,6 +37,52 @@ exports.main = async (event, context) => {
         success: true,
         message: '充电记录添加成功',
         record
+      }
+    } else if (action === 'recordClick') {
+      // 记录用户点击充电桩的行为
+      const record = {
+        _openid: OPENID,
+        stationId,
+        stationName,
+        campus,
+        provider,
+        action: 'click',
+        timestamp: new Date(),
+        date: new Date().toISOString().split('T')[0],
+        hour: new Date().getHours(),
+        timeSlot: getTimeSlot(new Date().getHours())
+      }
+
+      await db.collection('chargingHistory').add({
+        data: record
+      })
+
+      return {
+        success: true,
+        message: '点击记录添加成功',
+        record
+      }
+    } else if (action === 'recordSubscribe') {
+      // 记录用户订阅充电桩的行为
+      for (const stationId of stationIds) {
+        const record = {
+          _openid: OPENID,
+          stationId,
+          action: 'subscribe',
+          timestamp: new Date(),
+          date: new Date().toISOString().split('T')[0],
+          hour: new Date().getHours(),
+          timeSlot: getTimeSlot(new Date().getHours())
+        }
+
+        await db.collection('chargingHistory').add({
+          data: record
+        })
+      }
+
+      return {
+        success: true,
+        message: '订阅记录添加成功'
       }
     } else if (action === 'get') {
       const { days = 30 } = event

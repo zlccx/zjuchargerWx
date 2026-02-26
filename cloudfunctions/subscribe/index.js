@@ -54,6 +54,15 @@ exports.main = async (event, context) => {
       })
     }
 
+    // 调用 recordChargingHistory 云函数记录订阅行为
+    await cloud.callFunction({
+      name: 'recordChargingHistory',
+      data: {
+        action: 'recordSubscribe',
+        stationIds: stationIds || []
+      }
+    })
+
     return {
       success: true,
       _id: result._id || result._id,
