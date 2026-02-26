@@ -15,7 +15,7 @@
         <view 
           wx:for="{{campusList}}" 
           wx:key="id"
-          class="campus-item {{selectedCampuses.includes(item.id) ? 'active' : ''}}"
+          class="campus-item {{item.selected ? 'active' : ''}}"
           bindtap="toggleCampus"
           data-id="{{item.id}}"
         >
@@ -31,7 +31,7 @@
         <view 
           wx:for="{{timeSlotList}}" 
           wx:key="id"
-          class="time-slot-item {{selectedTimeSlots.includes(item.id) ? 'active' : ''}}"
+          class="time-slot-item {{item.selected ? 'active' : ''}}"
           bindtap="toggleTimeSlot"
           data-id="{{item.id}}"
         >
